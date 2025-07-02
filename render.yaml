@@ -11,6 +11,6 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        value: base64:aaQbCOvIVAqjxwRhuqXdCsN1DCR7iNJLUn3fMoGkxkM=
+        value:
       - key: APP_URL
         value: https://admin.48team.space
