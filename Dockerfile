@@ -22,6 +22,11 @@ RUN php artisan key:generate --show
 
 RUN php artisan config:cache && php artisan view:cache
 
+RUN mkdir -p storage/framework/{cache,sessions,views} storage/logs && \
+    chown -R www-data:www-data storage bootstrap/cache && \
+    chmod -R 775 storage bootstrap/cache
+
+
 
 # Install Node dependencies and build
 RUN npm install && npm run build
