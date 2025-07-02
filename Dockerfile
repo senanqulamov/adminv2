@@ -18,6 +18,9 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
+RUN php artisan config:cache && php artisan view:cache
+
+
 # Install Node dependencies and build
 RUN npm install && npm run build
 
