@@ -6,6 +6,7 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
+use Inertia\Inertia;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -51,6 +52,14 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'env' => app()->environment(),
         ];
     }
+//
+//    public function boot()
+//    {
+//        Inertia::share([
+//            'env' => app()->environment(),
+//        ]);
+//    }
 }

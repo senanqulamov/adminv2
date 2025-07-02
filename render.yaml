@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: adminpanel
+    env: docker
+    plan: free
+    branch: main
+    dockerfilePath: Dockerfile
+    buildCommand: ""
+    startCommand: ""
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        value: YOUR_APP_KEY
+      - key: APP_URL
+        value: https://admin.48team.space
