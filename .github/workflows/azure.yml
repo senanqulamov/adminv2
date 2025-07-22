@@ -19,13 +19,29 @@ jobs:
           extensions: mbstring, bcmath, xml, ctype, json, tokenizer, pdo, pdo_mysql
 
       - name: Install Composer Dependencies
-        run: |
-          composer install --no-dev --optimize-autoloader
+        run: composer install --no-dev --optimize-autoloader
 
-      - name: Build Frontend (if using Inertia/React)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install NPM dependencies and build
         run: |
-          npm install
+          npm ci
           npm run build
+
+      - name: Cache Laravel config
+        run: php artisan config:cache
+
+      - name: Create ZIP deployment package
+        run: |
+          mkdir deploy
+          cp -r app bootstrap config database public resources routes storage artisan composer.* package.json vendor deploy/
+          cp -r public/build deploy/public/build
+          cp -r public/*.php deploy/public/
+          cp -r .env.example deploy/.env
+          cd deploy && zip -r ../release.zip .
 
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
@@ -33,5 +49,4 @@ jobs:
           app-name: 'Adminv2'
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .
-
+          package: release.zip
