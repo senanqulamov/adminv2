@@ -20,7 +20,7 @@ yarn-error.log
 
 # Laravel build & cache
 /bootstrap/ssr
-/public/build
+!/public/build
 /public/hot
 /public/storage
 #/storage/*
