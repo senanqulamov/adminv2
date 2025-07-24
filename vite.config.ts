@@ -6,7 +6,9 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
     build: {
-        outDir: 'public/build', // Azure needs static assets in public/
+        outDir: 'public/build',
+        manifest: true,
+        emptyOutDir: true,
     },
     plugins: [
         laravel({
