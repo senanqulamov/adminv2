@@ -36,6 +36,12 @@ jobs:
           npm ci
           npm run build
 
+      - name: Ensure Laravel Storage Folders Exist
+        run: |
+          mkdir -p storage/framework/views
+          mkdir -p storage/framework/cache/data
+          mkdir -p storage/logs
+
       - name: 🧪 Laravel Optimization
         run: |
           php artisan config:cache
