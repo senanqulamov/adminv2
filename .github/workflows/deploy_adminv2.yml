@@ -11,41 +11,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: 📦 Checkout Repo
+        uses: actions/checkout@v3
 
-      - name: Setup PHP
+      - name: ⚙️ Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
           extensions: mbstring, bcmath, xml, ctype, json, tokenizer, pdo, pdo_mysql
+          tools: composer
 
-      - name: Install Composer dependencies
+      - name: 📥 Install Composer Dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Install NPM dependencies and build Vite
+      - name: 📥 Install Node Modules & Build Assets
         run: |
           npm ci
           npm run build
 
-      - name: Laravel Optimize
+      - name: 🔐 Generate APP Key
+        run: php artisan key:generate
+        env:
+          APP_KEY: ${{ secrets.APP_KEY }}
+
+      - name: ⚙️ Laravel Optimizations
         run: |
           php artisan config:cache
           php artisan route:cache
           php artisan view:cache
+          php artisan storage:link
 
-      - name: Zip contents for deployment
+      - name: 📦 Zip app for deployment
         run: |
-          zip -r release.zip . -x ".git/*" "node_modules/*" "tests/*" "storage/*.log" ".github/*"
+          mkdir deploy
+          zip -r deploy/release.zip . -x "**/tests/*" "**/.git/*" "**/node_modules/*" "**/vendor/*" "**/.github/*"
 
-      - name: Deploy to Azure Web App
+      - name: 🚀 Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'adminv2'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: release.zip
+          package: deploy/release.zip
