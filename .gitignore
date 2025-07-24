@@ -18,12 +18,6 @@ yarn-error.log
 /.nova
 /.fleet
 
-# Laravel build & cache
-/bootstrap/ssr
-!/public/build
-/public/hot
-/public/storage
-
 # Docker & Render
 render.yaml
 Dockerfile

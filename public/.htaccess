@@ -1,25 +1,15 @@
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
-
     RewriteEngine On
 
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    # Remove trailing slash
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
 
-    # Handle X-XSRF-Token Header
-    RewriteCond %{HTTP:x-xsrf-token} .
-    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
-
-#    # Remove trailing slashes
-#    RewriteCond %{REQUEST_FILENAME} !-d
-#    RewriteCond %{REQUEST_URI} (.+)/$
-#    RewriteRule ^ %1 [L,R=301]
-
-    # Send requests to front controller
+    # Front controller
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    # Serve only HTML for HMR
+    RewriteCond %{HTTP:Accept} text/html
+    RewriteRule ^ - [E=HTTP_ACCEPT:text/html]
 </IfModule>
